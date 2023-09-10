@@ -1,1 +1,5 @@
 rootProject.name = 'productApi'
+include 'user-api'
+include 'domain'
+include 'product-api'
+
