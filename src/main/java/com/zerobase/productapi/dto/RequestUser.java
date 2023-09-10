@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 public class RequestUser {
   @Encrypt
-  private int userIncomeAmount;
+  private String userIncomeAmount;
   private String userName;
   @Encrypt
   private String userRegistrationNumber;

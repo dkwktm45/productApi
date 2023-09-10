@@ -17,6 +17,6 @@ public class UserInfo {
   private String usrKey;
   private String usrRegNumber;
   private String usrName;
-  private int usrAmount;
+  private String usrAmount;
 
 }

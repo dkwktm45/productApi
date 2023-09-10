@@ -2,7 +2,10 @@ package com.zerobase.productapi.config;
 
 import com.zerobase.productapi.dto.Type.AopCurrent;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -17,7 +20,9 @@ public class LogAspect {
 
   @Pointcut(value = "within(com.zerobase.productapi.service.*)")
   public void currentServiceLocation() {}
-  @Before("currentServiceLocation() || currentControllerLocation()")
+
+
+  @Before("(currentServiceLocation() || currentControllerLocation())")
   private void beforeLog(JoinPoint joinPoint) {
     getLog(joinPoint , AopCurrent.BEFORE);
   }
@@ -30,4 +35,6 @@ public class LogAspect {
     String className = joinPoint.getTarget().getClass().getName();
     logger.info(input + " calling method: " + methodName + " in class: " + className);
   }
+
+
 }

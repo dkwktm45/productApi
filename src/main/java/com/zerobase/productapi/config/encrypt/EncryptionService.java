@@ -1,6 +1,5 @@
 package com.zerobase.productapi.config.encrypt;
 
-import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.stereotype.Service;
 
@@ -14,30 +13,50 @@ import java.util.Base64;
 
 @Service
 public class EncryptionService {
-  private static final String KEY = "wnviowenvemwpemcd1232190fwef10203";
+  private static final String KEY = "thisisa16bytekey";
   private static final String INSTANCE = "AES/ECB/PKCS5Padding";
-  public String decode(String data) throws InvalidCipherTextException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+
+  static {
     Security.addProvider(new BouncyCastleProvider());
-    Cipher cipher = Cipher.getInstance(INSTANCE);
-
-    byte[] decodedEncryptedMessage = Base64.getDecoder().decode(data);
-    byte[] decryptedMessageBytes = cipher.doFinal(decodedEncryptedMessage);
-
-    return new String(decryptedMessageBytes, StandardCharsets.UTF_8);
-  }
-  public String encode(String data) throws InvalidCipherTextException, InvalidKeyException, NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException {
-    Security.addProvider(new BouncyCastleProvider());
-    byte[] encryptionKeyBytes = KEY.getBytes(StandardCharsets.UTF_8);
-
-    Cipher cipher = Cipher.getInstance(INSTANCE);
-    SecretKey secretKey = new SecretKeySpec(encryptionKeyBytes, "AES");
-    cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-    byte[] encrpyedMessageBytes = cipher.doFinal(data.getBytes());
-
-    return Base64.getEncoder().encodeToString(encrpyedMessageBytes);
   }
 
+  public String decode(String data) {
+    try {
+      byte[] encryptionKeyBytes = KEY.getBytes(StandardCharsets.UTF_8);
+      SecretKey secretKey = new SecretKeySpec(encryptionKeyBytes, "AES");
+      Cipher cipher = getCipher();
+      cipher.init(Cipher.DECRYPT_MODE,secretKey);
+      byte[] decryptedMessageBytes =
+          cipher.doFinal(Base64.getDecoder().decode(data));
 
+      return new String(decryptedMessageBytes, StandardCharsets.UTF_8);
+    } catch (NoSuchPaddingException | NoSuchAlgorithmException |
+             IllegalBlockSizeException | BadPaddingException |
+             InvalidKeyException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public String encode(String data) {
+    try {
+      byte[] encryptionKeyBytes = KEY.getBytes(StandardCharsets.UTF_8);
+      SecretKey secretKey = new SecretKeySpec(encryptionKeyBytes, "AES");
+      Cipher cipher = getCipher();
+      cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+      byte[] encrpyedMessageBytes = cipher.doFinal(data.getBytes());
+      return Base64.getEncoder().encodeToString(encrpyedMessageBytes);
+    } catch (NoSuchPaddingException | NoSuchAlgorithmException |
+             IllegalBlockSizeException | BadPaddingException |
+             InvalidKeyException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  private static Cipher getCipher() throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
+
+    Cipher cipher = Cipher.getInstance(INSTANCE);
+    return cipher;
+  }
 
 
 }
