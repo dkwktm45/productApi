@@ -1,0 +1,19 @@
+version: '2'
+services:
+  api:
+    image: product:1.0.1
+    container_name: product
+    ports:
+      - "80:80"
+    networks:
+      - project
+  consumer:
+    image: user:1.0.1
+    container_name: user
+    ports:
+      - "8080:8080"
+    networks:
+      - project
+networks:
+  fintech:
+    driver: bridge

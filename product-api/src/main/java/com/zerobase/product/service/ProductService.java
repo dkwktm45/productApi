@@ -8,6 +8,7 @@ import com.zerobase.domain.type.OrgCode;
 import com.zerobase.product.dto.RequestProduct;
 import com.zerobase.product.dto.ResponseCommon;
 import com.zerobase.product.dto.ResponseProduct;
+import com.zerobase.product.error.ProductException;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.zerobase.product.error.type.ProductErrorCode.PRODUCT_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +34,7 @@ public class ProductService {
   public List<ResponseProduct> getList(OrgCode orgCd) {
     List<ProductInfo> productInfos = productInfoRepository.findByProductOrg(
         productOrgRepository.findByOrgCd(orgCd)
-            .orElseThrow(() -> new NullPointerException("값을 찾지 못하고 있습니다.")));
+            .orElseThrow(() -> new ProductException(PRODUCT_NOT_FOUND)));
 
     return productInfos.stream().map(i -> new ResponseProduct(i)).collect(Collectors.toList());
   }

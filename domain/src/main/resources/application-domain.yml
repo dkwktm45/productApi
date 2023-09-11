@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/project?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://host.docker.internal:3306/project?serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
     driver-class-name: com.mysql.jdbc.Driver
-    username: root
-    password: dkwktm45
+    username: project
+    password: 1234
   jpa:
     open-in-view: true
     hibernate:
@@ -12,9 +12,9 @@ spring:
       hibernate:
         show-sql: true
         format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
     generate-ddl: false
-    database-platform: org.hibernate.dialect.MySQL8Dialect
   data:
     redis:
-      host: localhost
+      host: host.docker.internal
       port: 6379
