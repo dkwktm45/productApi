@@ -1,4 +1,4 @@
-package com.zerobase.product.config;
+package com.zerobase.user.config;
 
 import com.zerobase.domain.type.AopCurrent;
 import org.aspectj.lang.JoinPoint;
